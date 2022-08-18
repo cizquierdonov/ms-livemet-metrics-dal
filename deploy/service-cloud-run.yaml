@@ -1,0 +1,22 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: ms-livemet-metrics-dal
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: '1'
+    spec:
+      containers:
+      - image: gcr.io/live-metrics-2606/live-metrics:1.0
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: '1'
+            memory: 512Mi
+      timeoutSeconds: 300
+  traffic:
+  - latestRevision: true
+    percent: 100
