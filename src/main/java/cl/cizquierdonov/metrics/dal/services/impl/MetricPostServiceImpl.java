@@ -41,11 +41,11 @@ public class MetricPostServiceImpl implements MetricPostService {
     List<MetricPostDTO> metricPosts = new ArrayList<>();
 
     for (MetricPost entity : entities) {
-      MetricPostDTO metricPost = buildMetricPost(entity, metricTypeEntity.isScale());
+      MetricPostDTO metricPost = buildMetricPost(entity, metricTypeEntity);
       metricPosts.add(metricPost);
     }
 
-    LOG.info("[" + Constants.METRIC_POSTS_CONTEXT_PATH + "] Result: " + metricPosts);
+    LOG.info("[" + Constants.METRIC_POSTS_CONTEXT_PATH + "] Number of post metrics: " + metricPosts.size());
 
     return metricPosts;
   }
@@ -153,7 +153,7 @@ public class MetricPostServiceImpl implements MetricPostService {
    * @param entity
    * @return
    */
-  private MetricPostDTO buildMetricPost(MetricPost entity, boolean scale) {
+  private MetricPostDTO buildMetricPost(MetricPost entity, MetricType metricTypeEntity) {
     MetricPostDTO metricPost = new MetricPostDTO();
 
     if (entity != null) {
@@ -161,13 +161,17 @@ public class MetricPostServiceImpl implements MetricPostService {
       metricPost.setType(entity.getType());
       NumberFormat nf = DecimalFormat.getInstance();
 
-      if (scale) {
+      if (metricTypeEntity.isScale()) {
         nf.setMaximumFractionDigits(1);
       } else {
         nf.setMaximumFractionDigits(0);
       }
 
       String value = nf.format(entity.getValue());
+
+      if ( (metricTypeEntity.getSuffix() != null) && !(metricTypeEntity.getSuffix().equals("")) ) {
+        value = value.concat(" ").concat(metricTypeEntity.getSuffix());
+      }
 
       metricPost.setValue(value);
       metricPost.setReview(entity.getReview());

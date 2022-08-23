@@ -108,7 +108,7 @@ public class MetricResources {
       LOG.error(e.getMessage(), e);
 
       Result result = new Result(Constants.EXCEPTION_RESPONSE_ERROR_CODE, Constants.ERROR_MESSAGE_GET_METRIC_POSTS);
-      return Response.status(Constants.HTTP_500_CODE).entity(result).build();
+      return Response.status(Constants.HTTP_500_CODE).entity(result)/*.header("Access-Control-Allow-Origin", "http://localhost:3000/").header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD, OPTIONS")*/.build();
     }
   }
 

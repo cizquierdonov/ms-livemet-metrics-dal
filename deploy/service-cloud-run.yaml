@@ -9,14 +9,30 @@ spec:
         autoscaling.knative.dev/maxScale: '1'
     spec:
       containers:
-      - image: gcr.io/live-metrics-2606/live-metrics:1.0
+      - image: gcr.io/live-metrics-2606/live-metrics:1.0.0
+        env:
+        - name: SYS_LOGGING_LEVEL
+          value: info
+        - name: DATABASE_ENGINE
+          value: postgresql
+        - name: DATABASE_USERNAME
+          value: own_metrics
+        - name: DATABASE_HOST
+          value: '34.67.89.210'
+        - name: DATABASE_PORT
+          value: '5432'
+        - name: DATABASE_NAME
+          value: metrics
+        - name: SCHEMA_DATA_BASE
+          value: metrics
         ports:
-        - containerPort: 80
+        - containerPort: 8080
         resources:
           limits:
             cpu: '1'
             memory: 512Mi
       timeoutSeconds: 300
+      serviceAccountName: ms-livemet-metrics-dal-sa@live-metrics-2606.iam.gserviceaccount.com
   traffic:
   - latestRevision: true
     percent: 100

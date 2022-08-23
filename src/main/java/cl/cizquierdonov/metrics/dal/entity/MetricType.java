@@ -22,7 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NamedQueries({
-  @NamedQuery(name = "MetricType.getActiveMetricTypes", query = "from MetricType where active = ?1")
+  @NamedQuery(name = "MetricType.getActiveMetricTypes", query = "from MetricType where active = ?1 order by name asc")
 })
 public class MetricType extends PanacheEntityBase {
 

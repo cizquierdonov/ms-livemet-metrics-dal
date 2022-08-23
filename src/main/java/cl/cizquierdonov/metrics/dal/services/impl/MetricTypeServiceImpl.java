@@ -82,6 +82,7 @@ public class MetricTypeServiceImpl implements MetricTypeService {
       metricType.setDescription(entity.getDescription());
       metricType.setSuffix(entity.getSuffix());
       metricType.setScale(entity.isScale());
+      metricType.setActive(entity.isActive());
     }
 
     return metricType;

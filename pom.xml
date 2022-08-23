@@ -113,7 +113,7 @@
           </systemPropertyVariables>
         </configuration>
       </plugin>
-      <plugin>
+      <!-- <plugin>
         <groupId>com.google.cloud.tools</groupId>
         <artifactId>jib-maven-plugin</artifactId>
         <version>3.2.1</version>
@@ -122,10 +122,10 @@
             <mainClass>cl.cizquierdonov.metrics.dal.Main</mainClass>
           </container>
           <to>
-            <image>gcr.io/live-metrics-2606/livemet:1.0</image>
+            <image>gcr.io/live-metrics-2606/livemet:1.1</image>
           </to>
         </configuration>
-      </plugin>
+      </plugin> -->
     </plugins>
   </build>
   <profiles>
