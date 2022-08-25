@@ -9,7 +9,7 @@ spec:
         autoscaling.knative.dev/maxScale: '1'
     spec:
       containers:
-      - image: gcr.io/live-metrics-2606/live-metrics:1.0.0
+      - image: gcr.io/live-metrics-2606/live-metrics-dal:1.0.0
         env:
         - name: SYS_LOGGING_LEVEL
           value: info

@@ -90,9 +90,9 @@ public class MetricPostServiceImpl implements MetricPostService {
     MetricType metricTypeEntity = MetricType.findById(type);
     String suffix = metricTypeEntity.getSuffix();
 
-    String avgPerMinute = calculateAveragePerMinute(type, calendarFrom, calendarTo, suffix);
-    String avgPerHour = calculateAveragePerHour(type, calendarFrom, calendarTo, suffix);
-    String avgPerDay = calculateAveragePerDay(type, calendarFrom, calendarTo, suffix);
+    String avgPerMinute = calculateAveragePerMinute(type, (Calendar) calendarFrom.clone(), (Calendar) calendarTo.clone(), suffix);
+    String avgPerHour = calculateAveragePerHour(type, (Calendar) calendarFrom.clone(), (Calendar) calendarTo.clone(), suffix);
+    String avgPerDay = calculateAveragePerDay(type, (Calendar) calendarFrom.clone(), (Calendar) calendarTo.clone(), suffix);
 
     LOG.info("[" + Constants.METRIC_AVERAGE_CONTEXT_PATH + "] Average calculated: per minute: '" 
           + avgPerMinute + "', per hour: '" + avgPerHour + "', per day: '" + avgPerDay + "'");
@@ -119,8 +119,8 @@ public class MetricPostServiceImpl implements MetricPostService {
   private String calculateAveragePerHour(String type, Calendar calendarFrom, Calendar calendarTo, String suffix) {
     String avgStr = null;
 
-    calendarFrom.set(Calendar.MINUTE, 0);
-    calendarTo.set(Calendar.MINUTE, 0);
+    //calendarFrom.set(Calendar.MINUTE, 0);
+    //calendarTo.set(Calendar.MINUTE, 0);
     calendarTo.add(Calendar.HOUR, 1);
 
     avgStr = calculateAverage(type, calendarFrom, calendarTo, suffix);
@@ -131,10 +131,10 @@ public class MetricPostServiceImpl implements MetricPostService {
   private String calculateAveragePerDay(String type, Calendar calendarFrom, Calendar calendarTo, String suffix) {
     String avgStr = null;
 
-    calendarFrom.set(Calendar.MINUTE, 0);
+    /*calendarFrom.set(Calendar.MINUTE, 0);
     calendarTo.set(Calendar.MINUTE, 0);
     calendarFrom.set(Calendar.HOUR, 0);
-    calendarTo.set(Calendar.HOUR, 0);
+    calendarTo.set(Calendar.HOUR, 0);*/
     calendarTo.add(Calendar.DAY_OF_MONTH, 1);
     avgStr = calculateAverage(type, calendarFrom, calendarTo, suffix);
 
@@ -145,6 +145,9 @@ public class MetricPostServiceImpl implements MetricPostService {
     String avgStr;
     Timestamp from = new Timestamp(calendarFrom.getTime().getTime());
     Timestamp to = new Timestamp(calendarTo.getTime().getTime());
+    SimpleDateFormat sdf = new SimpleDateFormat(Constants.SECS_DATE_FORMAT);
+    LOG.info("##### from: " + sdf.format(calendarFrom.getTime()));
+    LOG.info("##### to: " + sdf.format(calendarTo.getTime()));
     List<MetricPost> entities = MetricPost.getAverageByDateRange(type, from, to);
     Double avg = 0.0;
 

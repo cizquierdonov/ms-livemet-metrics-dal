@@ -13,8 +13,8 @@ public class Constants {
   public static final int EXCEPTION_RESPONSE_ERROR_CODE = -1;
   public static final int INVALID_FIELD_FORMAT_RESPONSE_ERROR_CODE = -3;
 
-  public static final String MILLISECS_DATE_FORMAT = "yyyy-MM-dd hh:mm:ss.SSS";
-  public static final String SECS_DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
+  public static final String MILLISECS_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+  public static final String SECS_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
   public static final String METRIC_TYPES_CONTEXT_PATH = "/metric-types";
   public static final String METRIC_POSTS_CONTEXT_PATH = "/metric-posts";

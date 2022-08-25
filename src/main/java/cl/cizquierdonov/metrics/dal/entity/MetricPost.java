@@ -26,7 +26,7 @@ import lombok.Setter;
 @Setter
 @NamedQueries({
   @NamedQuery(name = "MetricPost.getMetricPostsByType", query = "from MetricPost where type = ?1 order by recordDate desc"),
-  @NamedQuery(name = "MetricPost.getAverageByDateRange", query = "from MetricPost where type = ?1 and recordDate >= ?2 and recordDate < ?3")
+  @NamedQuery(name = "MetricPost.getAverageByDateRange", query = "from MetricPost where type = ?1 and recordDate >= ?2 and recordDate <= ?3")
 })
 public class MetricPost extends PanacheEntityBase {
 
@@ -63,7 +63,7 @@ public class MetricPost extends PanacheEntityBase {
    * @return  List of {@link MetricPost} inside this range.
    */
   public static List<MetricPost> getAverageByDateRange(String type, Timestamp from, Timestamp to) {
-    return find("#MetricPost.getAverageByDateRange", type, from, to).page(1,4).list();
+    return find("#MetricPost.getAverageByDateRange", type, from, to).list();
   }
   
 }
