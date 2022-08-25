@@ -17,7 +17,7 @@ import org.jboss.logging.Logger;
 
 import cl.cizquierdonov.metrics.dal.entity.MetricPost;
 import cl.cizquierdonov.metrics.dal.entity.MetricType;
-import cl.cizquierdonov.metrics.dal.model.AverageType;
+import cl.cizquierdonov.metrics.dal.model.Average;
 import cl.cizquierdonov.metrics.dal.model.MetricPostDTO;
 import cl.cizquierdonov.metrics.dal.services.MetricPostService;
 import cl.cizquierdonov.metrics.dal.util.Constants;
@@ -62,13 +62,12 @@ public class MetricPostServiceImpl implements MetricPostService {
   }
 
   @Override
-  public String getMetricAverageByDatetime(String type, AverageType avgType, String strDate) {
+  public Average getMetricAverageByDatetime(String type, String strDate) {
 
     LOG.info("[" + Constants.METRIC_AVERAGE_CONTEXT_PATH + "] Calculating post metrics average: metric=" + type
-          + ", average=" + avgType + ", date=" + strDate + ".");
-    String strAvg = null;
-    Timestamp from = null;
-    Timestamp to = null;
+          + ", date=" + strDate + ".");
+
+    Average average = new Average();
     SimpleDateFormat sdf = new SimpleDateFormat(Constants.SECS_DATE_FORMAT);
     Calendar calendarFrom = Calendar.getInstance();
     Calendar calendarTo = Calendar.getInstance();
@@ -76,38 +75,76 @@ public class MetricPostServiceImpl implements MetricPostService {
     try {
       Date date = sdf.parse(strDate);      
       calendarFrom.setTime(date);
-      calendarTo.setTime(date);      
+      calendarTo.setTime(date);
+
       calendarFrom.set(Calendar.MILLISECOND, 0);
       calendarTo.set(Calendar.MILLISECOND, 0);
       calendarFrom.set(Calendar.SECOND, 0);
       calendarTo.set(Calendar.SECOND, 0);
-      
-      if (avgType == AverageType.MINUTE) {
-        LOG.info("IS MINUTE!!!");
-        calendarTo.add(Calendar.MINUTE, 1);
-        
-      } else if (avgType == AverageType.HOUR) {
-        LOG.info("IS HOUR!!!");
-        calendarFrom.set(Calendar.MINUTE, 0);
-        calendarTo.set(Calendar.MINUTE, 0);
-        calendarTo.add(Calendar.HOUR, 1);
-      
-      } else if (avgType == AverageType.DAY) {
-        LOG.info("IS DAY!!!");
-        calendarFrom.set(Calendar.MINUTE, 0);
-        calendarTo.set(Calendar.MINUTE, 0);
-        calendarFrom.set(Calendar.HOUR, 0);
-        calendarTo.set(Calendar.HOUR, 0);
-        calendarTo.add(Calendar.DAY_OF_MONTH, 1);
-      }
 
     } catch (ParseException e) {
       LOG.error(e.getMessage(), e);
       return null;
     }
 
-    from = new Timestamp(calendarFrom.getTime().getTime());
-    to = new Timestamp(calendarTo.getTime().getTime());
+    MetricType metricTypeEntity = MetricType.findById(type);
+    String suffix = metricTypeEntity.getSuffix();
+
+    String avgPerMinute = calculateAveragePerMinute(type, calendarFrom, calendarTo, suffix);
+    String avgPerHour = calculateAveragePerHour(type, calendarFrom, calendarTo, suffix);
+    String avgPerDay = calculateAveragePerDay(type, calendarFrom, calendarTo, suffix);
+
+    LOG.info("[" + Constants.METRIC_AVERAGE_CONTEXT_PATH + "] Average calculated: per minute: '" 
+          + avgPerMinute + "', per hour: '" + avgPerHour + "', per day: '" + avgPerDay + "'");
+
+    average.setAvgPerMinute(avgPerMinute);
+    average.setAvgPerHour(avgPerHour);    
+    average.setAvgPerDay(avgPerDay);
+    average.setDate(strDate);
+    average.setMetricType(type);
+    
+    return average;
+  }
+
+  private String calculateAveragePerMinute(String type, Calendar calendarFrom, Calendar calendarTo, String suffix) {
+    String avgStr = null;
+
+    calendarTo.add(Calendar.MINUTE, 1);
+
+    avgStr = calculateAverage(type, calendarFrom, calendarTo, suffix);
+
+    return avgStr;
+  }
+
+  private String calculateAveragePerHour(String type, Calendar calendarFrom, Calendar calendarTo, String suffix) {
+    String avgStr = null;
+
+    calendarFrom.set(Calendar.MINUTE, 0);
+    calendarTo.set(Calendar.MINUTE, 0);
+    calendarTo.add(Calendar.HOUR, 1);
+
+    avgStr = calculateAverage(type, calendarFrom, calendarTo, suffix);
+
+    return avgStr;
+  }
+
+  private String calculateAveragePerDay(String type, Calendar calendarFrom, Calendar calendarTo, String suffix) {
+    String avgStr = null;
+
+    calendarFrom.set(Calendar.MINUTE, 0);
+    calendarTo.set(Calendar.MINUTE, 0);
+    calendarFrom.set(Calendar.HOUR, 0);
+    calendarTo.set(Calendar.HOUR, 0);
+    calendarTo.add(Calendar.DAY_OF_MONTH, 1);
+    avgStr = calculateAverage(type, calendarFrom, calendarTo, suffix);
+
+    return avgStr;
+  }
+
+  private String calculateAverage(String type, Calendar calendarFrom, Calendar calendarTo, String suffix) {
+    String avgStr;
+    Timestamp from = new Timestamp(calendarFrom.getTime().getTime());
+    Timestamp to = new Timestamp(calendarTo.getTime().getTime());
     List<MetricPost> entities = MetricPost.getAverageByDateRange(type, from, to);
     Double avg = 0.0;
 
@@ -117,15 +154,12 @@ public class MetricPostServiceImpl implements MetricPostService {
 
     if (avg != 0) {
       avg /= entities.size();
-      strAvg = String.format("%.1f", avg).replace(",", ".");
+      avgStr = String.format("%.1f", avg).replace(",", ".").concat(" ").concat(suffix);
 
     } else {
-      strAvg = "0.0";
+      avgStr = "-";
     }
-
-    LOG.info("[" + Constants.METRIC_AVERAGE_CONTEXT_PATH + "] Average calculated: '" + strAvg + "'.");
-
-    return strAvg;
+    return avgStr;
   }
 
   /**

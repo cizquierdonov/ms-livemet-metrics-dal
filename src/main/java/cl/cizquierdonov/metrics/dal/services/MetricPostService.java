@@ -2,7 +2,7 @@ package cl.cizquierdonov.metrics.dal.services;
 
 import java.util.List;
 
-import cl.cizquierdonov.metrics.dal.model.AverageType;
+import cl.cizquierdonov.metrics.dal.model.Average;
 import cl.cizquierdonov.metrics.dal.model.MetricPostDTO;
 
 /**
@@ -24,12 +24,12 @@ public interface MetricPostService {
   public void createMetricPost(MetricPostDTO metricPost);
 
   /**
-   * Calculates metric value average from a metric posts list of a specific metric type, in a specific date.
+   * Calculates metric value average from a metric posts list of a specific metric type, in a specific date,
+   * getting three different types of average: by day, hour and minute.
    * @param metricType  Metric type to filter.
    * @param strDate String represetation of the specific date.
-   * @param avgType Average type to calculate (in a minute, hour or day).
    * @return  Average in string format (could be an integer or a double).
    */
-  public String getMetricAverageByDatetime(String type, AverageType avgType, String strDate);
+  public Average getMetricAverageByDatetime(String type, String strDate);
   
 }

@@ -20,10 +20,16 @@ public class Average {
   @JsonProperty("metricType")
   private String metricType;
 
-  @JsonProperty("averageType")
-  private String averageType;
-
   @JsonProperty("date")
   private String date;
+
+  @JsonProperty("avgPerDay")
+  private String avgPerDay;
+
+  @JsonProperty("avgPerHour")
+  private String avgPerHour;
+
+  @JsonProperty("avgPerMinute")
+  private String avgPerMinute;
 
 }

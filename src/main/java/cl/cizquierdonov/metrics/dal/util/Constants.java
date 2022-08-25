@@ -32,7 +32,7 @@ public class Constants {
   public static final String INVALID_REQUEST_MESSAGE_CREATE_METRIC_POST = "Fields 'type', 'value' and 'recordDate' inside an 'metricPost' element are mandatory, must not be null or empty.";
   public static final String INVALID_DATE_MESSAGE_CREATE_METRIC_POST = "Field 'recorDate' must have a valid format ('" + MILLISECS_DATE_FORMAT + "' or '" + SECS_DATE_FORMAT + "') and must be less than the current time.";
   public static final String INVALID_VALUE_MESSAGE_CREATE_METRIC_POST = "Field 'value' must be a number (could be float with '.' numeric separator or an integer) and must be a value between -9999.9 and 9999.9 inclusive (max 4 precision digits and 0 or 1 scale digits). Examples: \"9999\", \"1234.5\", \"68\", \"0.1\", etc.";
-  public static final String INVALID_REQUEST_MESSAGE_GET_AVERAGE = "Fields 'metricType', 'averageType' and 'date' inside an 'average' object are mandatory and must not be null or empty.";
+  public static final String INVALID_REQUEST_MESSAGE_GET_AVERAGE = "Fields 'metricType', and 'date' inside 'average' object are mandatory and must not be null or empty.";
   public static final String INVALID_AVERAGE_TYPE_MESSAGE_GET_AVERAGE = "Field 'averageType' value must be 'Hour', 'Minute' or 'Day'.";
   public static final String INVALID_DATE_MESSAGE_GET_AVERAGE = "Field 'date' must have a valid format ('" + MILLISECS_DATE_FORMAT + "' or '" + SECS_DATE_FORMAT + "') and must be less than the current time.";
 }

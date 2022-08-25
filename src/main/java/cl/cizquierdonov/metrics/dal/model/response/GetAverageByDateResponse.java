@@ -3,6 +3,7 @@ package cl.cizquierdonov.metrics.dal.model.response;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import cl.cizquierdonov.metrics.dal.model.Average;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class GetAverageByDateResponse {
 
   @JsonProperty("average")
-  private String average;
+  private Average average;
 
   @JsonProperty("result")
   private Result result;

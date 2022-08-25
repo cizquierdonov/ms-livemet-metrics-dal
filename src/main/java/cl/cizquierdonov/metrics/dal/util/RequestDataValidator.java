@@ -53,7 +53,6 @@ public class RequestDataValidator {
    */
   public static boolean noEmptyFieldsGetAverageRequest(Average average) {
     if ( (average.getMetricType() != null) && (!average.getMetricType().trim().equals(""))
-          && (average.getAverageType() != null) && (!average.getAverageType().trim().equals(""))
           && (average.getDate() != null) ) {
       return true;
     } else {

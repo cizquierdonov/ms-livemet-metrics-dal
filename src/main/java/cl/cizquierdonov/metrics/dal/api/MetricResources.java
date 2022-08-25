@@ -16,7 +16,6 @@ import org.jboss.logging.Logger;
 
 import cl.cizquierdonov.metrics.dal.entity.MetricPost;
 import cl.cizquierdonov.metrics.dal.model.Average;
-import cl.cizquierdonov.metrics.dal.model.AverageType;
 import cl.cizquierdonov.metrics.dal.model.MetricPostDTO;
 import cl.cizquierdonov.metrics.dal.model.MetricTypeDTO;
 import cl.cizquierdonov.metrics.dal.model.request.CreateMetricPostRequest;
@@ -213,18 +212,12 @@ public class MetricResources {
 
       Average average = request.getAverage();
 
-      if (AverageType.getInstance(average.getAverageType()) == null) {
-        Result errorResult = new Result(Constants.INVALID_FIELD_FORMAT_RESPONSE_ERROR_CODE, Constants.INVALID_AVERAGE_TYPE_MESSAGE_GET_AVERAGE);
-        return Response.status(Constants.HTTP_400_CODE).entity(errorResult).build();
-      }
-
       if (!RequestDataValidator.isValidDate(average.getDate())) {
         Result errorResult = new Result(Constants.INVALID_FIELD_FORMAT_RESPONSE_ERROR_CODE, Constants.INVALID_DATE_MESSAGE_GET_AVERAGE);
         return Response.status(Constants.HTTP_400_CODE).entity(errorResult).build();
       }
 
-      String avg = metricPostService.getMetricAverageByDatetime(
-            average.getMetricType(), AverageType.getInstance(average.getAverageType()), average.getDate());
+      Average avg = metricPostService.getMetricAverageByDatetime(average.getMetricType(), average.getDate());
 
       Result result = new Result(0, Constants.MESSAGE_SUCCESSFUL_OPERATON);
       
