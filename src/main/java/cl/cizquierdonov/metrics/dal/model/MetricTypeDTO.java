@@ -32,4 +32,14 @@ public class MetricTypeDTO {
   @JsonProperty("scale")
   private boolean scale;
 
+  public MetricTypeDTO clone() {
+    MetricTypeDTO metric = new MetricTypeDTO();
+    metric.setActive(this.active);
+    metric.setDescription(this.description);
+    metric.setName(this.name);
+    metric.setScale(this.scale);
+    metric.setSuffix(this.suffix);
+    return metric;
+  }
+
 }

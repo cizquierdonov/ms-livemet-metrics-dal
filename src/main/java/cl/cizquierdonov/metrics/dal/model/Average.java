@@ -32,4 +32,14 @@ public class Average {
   @JsonProperty("avgPerMinute")
   private String avgPerMinute;
 
+  public Average clone() {
+    Average average = new Average();
+    average.setAvgPerDay(this.avgPerDay);
+    average.setAvgPerHour(this.avgPerHour);
+    average.setAvgPerMinute(this.avgPerMinute);
+    average.setDate(this.date);
+    average.setMetricType(this.metricType);
+    return average;
+  }
+
 }

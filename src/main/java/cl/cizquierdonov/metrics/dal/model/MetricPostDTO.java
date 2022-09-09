@@ -31,5 +31,15 @@ public class MetricPostDTO {
 
   @JsonProperty("recordDate")
   private String recordDate;
+
+  public MetricPostDTO clone() {
+    MetricPostDTO post = new MetricPostDTO();
+    post.setId(this.id);
+    post.setRecordDate(this.recordDate);
+    post.setReview(this.review);
+    post.setType(this.type);
+    post.setValue(this.value);
+    return post;
+  }
   
 }

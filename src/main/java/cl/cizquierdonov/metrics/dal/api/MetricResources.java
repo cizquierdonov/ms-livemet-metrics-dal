@@ -67,12 +67,14 @@ public class MetricResources {
       response.setResult(result);
       return Response.ok(response).build();
 
-    } catch (Exception e) {
+    } catch (RuntimeException e) {
       LOG.error(Constants.ERROR_MESSAGE_GET_METRIC_TYPES);
       LOG.error(e.getMessage(), e);
 
       Result result = new Result(Constants.EXCEPTION_RESPONSE_ERROR_CODE, Constants.ERROR_MESSAGE_GET_METRIC_TYPES);
-      return Response.status(Constants.HTTP_500_CODE).entity(result).build();
+      GetMetricTypesResponse response = new GetMetricTypesResponse();
+      response.setResult(result);
+      return Response.status(Constants.HTTP_500_CODE).entity(response).build();
     }
   }
 
@@ -102,12 +104,14 @@ public class MetricResources {
       
       return Response.ok(response).build();
 
-    } catch (Exception e) {
+    } catch (RuntimeException e) {
       LOG.error(Constants.ERROR_MESSAGE_GET_METRIC_TYPES);
       LOG.error(e.getMessage(), e);
 
       Result result = new Result(Constants.EXCEPTION_RESPONSE_ERROR_CODE, Constants.ERROR_MESSAGE_GET_METRIC_POSTS);
-      return Response.status(Constants.HTTP_500_CODE).entity(result)/*.header("Access-Control-Allow-Origin", "http://localhost:3000/").header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD, OPTIONS")*/.build();
+      GetMetricPostsResponse response = new GetMetricPostsResponse();
+      response.setResult(result);
+      return Response.status(Constants.HTTP_500_CODE).entity(response).build();
     }
   }
 
@@ -126,7 +130,8 @@ public class MetricResources {
       if ( (request == null) || (request.getMetricType() == null)
             || !(RequestDataValidator.noEmptyFieldsMetricTypeRequest(request.getMetricType())) ) {
         Result errorResult = new Result(Constants.EMPTY_FIELDS_RESPONSE_ERROR_CODE, Constants.INVALID_REQUEST_MESSAGE_CREATE_METRIC_TYPE);
-        return Response.status(Constants.HTTP_400_CODE).entity(errorResult).build();
+        CreateMetricTypeResponse createMetricTypeResponse = new CreateMetricTypeResponse(errorResult);
+        return Response.status(Constants.HTTP_400_CODE).entity(createMetricTypeResponse).build();
       }
 
       metricTypeService.createMetricType(request.getMetricType());
@@ -135,12 +140,14 @@ public class MetricResources {
       CreateMetricTypeResponse createMetricTypeResponse = new CreateMetricTypeResponse(result);
 
       return Response.ok(createMetricTypeResponse).build();
-    } catch (Exception e) {
+
+    } catch (RuntimeException e) {
       LOG.error(Constants.ERROR_MESSAGE_CREATE_METRIC_TYPE);
       LOG.error(e.getMessage(), e);
 
       Result result = new Result(Constants.EXCEPTION_RESPONSE_ERROR_CODE, Constants.ERROR_MESSAGE_CREATE_METRIC_TYPE);
-      return Response.status(Constants.HTTP_500_CODE).entity(result).build();
+      CreateMetricTypeResponse createMetricTypeResponse = new CreateMetricTypeResponse(result);
+      return Response.status(Constants.HTTP_500_CODE).entity(createMetricTypeResponse).build();
     }
   }
 
@@ -154,39 +161,45 @@ public class MetricResources {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response createMetricPost(CreateMetricPostRequest request) {
+    CreateMetricPostResponse createMetricPostResponse = null;
     try {
 
       if ( (request == null) || (request.getMetricPost() == null)
             || !(RequestDataValidator.noEmptyFieldsMetricPostRequest(request.getMetricPost())) )  {
         Result errorResult = new Result(Constants.EMPTY_FIELDS_RESPONSE_ERROR_CODE, Constants.INVALID_REQUEST_MESSAGE_CREATE_METRIC_POST);
-        return Response.status(Constants.HTTP_400_CODE).entity(errorResult).build();
+        createMetricPostResponse = new CreateMetricPostResponse(errorResult);
+        return Response.status(Constants.HTTP_400_CODE).entity(createMetricPostResponse).build();
       }
 
       MetricPostDTO metricPost = request.getMetricPost();
 
       if (!RequestDataValidator.isValidDate(metricPost.getRecordDate())) {
         Result errorResult = new Result(Constants.INVALID_FIELD_FORMAT_RESPONSE_ERROR_CODE, Constants.INVALID_DATE_MESSAGE_CREATE_METRIC_POST);
-        return Response.status(Constants.HTTP_400_CODE).entity(errorResult).build();
+        createMetricPostResponse = new CreateMetricPostResponse(errorResult);
+        return Response.status(Constants.HTTP_400_CODE).entity(createMetricPostResponse).build();
       }
 
       if (!RequestDataValidator.isValidValue(metricPost.getValue())) {
         Result errorResult = new Result(Constants.INVALID_FIELD_FORMAT_RESPONSE_ERROR_CODE, Constants.INVALID_VALUE_MESSAGE_CREATE_METRIC_POST);
-        return Response.status(Constants.HTTP_400_CODE).entity(errorResult).build();
+        createMetricPostResponse = new CreateMetricPostResponse(errorResult);
+        return Response.status(Constants.HTTP_400_CODE).entity(createMetricPostResponse).build();
       }
 
       metricPostService.createMetricPost(metricPost);
 
       Result result = new Result(Constants.SUCCESS_RESPONSE_CODE, Constants.MESSAGE_SUCCESSFUL_CREATION);
-      CreateMetricPostResponse createMetricPostResponse = new CreateMetricPostResponse();
-      createMetricPostResponse.setResult(result);
+      createMetricPostResponse = new CreateMetricPostResponse(result);
 
       return Response.ok(createMetricPostResponse).build();
-    } catch (Exception e) {
+
+    } catch (RuntimeException e) {
       LOG.error(Constants.ERROR_MESSAGE_CREATE_METRIC_POST);
       LOG.error(e.getMessage(), e);
 
-      Result result = new Result(Constants.EXCEPTION_RESPONSE_ERROR_CODE, Constants.ERROR_MESSAGE_CREATE_METRIC_POST);
-      return Response.status(Constants.HTTP_500_CODE).entity(result).build();
+      Result errorResult = new Result(Constants.EXCEPTION_RESPONSE_ERROR_CODE, Constants.ERROR_MESSAGE_CREATE_METRIC_POST);
+      createMetricPostResponse = new CreateMetricPostResponse(errorResult);
+
+      return Response.status(Constants.HTTP_500_CODE).entity(createMetricPostResponse).build();
     }
   }
 
@@ -202,37 +215,41 @@ public class MetricResources {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Response getAverageByDate(GetAverageByDateRequest request) {
+    GetAverageByDateResponse getAverageByDateResponse = new GetAverageByDateResponse();
     try {
 
       if ( (request == null) || (request.getAverage() == null)
             || !(RequestDataValidator.noEmptyFieldsGetAverageRequest(request.getAverage())) ) {
+
         Result errorResult = new Result(Constants.EMPTY_FIELDS_RESPONSE_ERROR_CODE, Constants.INVALID_REQUEST_MESSAGE_GET_AVERAGE);
-        return Response.status(Constants.HTTP_400_CODE).entity(errorResult).build();
+        getAverageByDateResponse.setResult(errorResult);
+        return Response.status(Constants.HTTP_400_CODE).entity(getAverageByDateResponse).build();
+
       }
 
       Average average = request.getAverage();
 
       if (!RequestDataValidator.isValidDate(average.getDate())) {
         Result errorResult = new Result(Constants.INVALID_FIELD_FORMAT_RESPONSE_ERROR_CODE, Constants.INVALID_DATE_MESSAGE_GET_AVERAGE);
-        return Response.status(Constants.HTTP_400_CODE).entity(errorResult).build();
+        getAverageByDateResponse.setResult(errorResult);
+        return Response.status(Constants.HTTP_400_CODE).entity(getAverageByDateResponse).build();
       }
 
       Average avg = metricPostService.getMetricAverageByDatetime(average.getMetricType(), average.getDate());
 
-      Result result = new Result(0, Constants.MESSAGE_SUCCESSFUL_OPERATON);
-      
-      GetAverageByDateResponse getAverageByDateResponse = new GetAverageByDateResponse();
+      Result result = new Result(0, Constants.MESSAGE_SUCCESSFUL_OPERATON);      
       getAverageByDateResponse.setAverage(avg);
       getAverageByDateResponse.setResult(result);    
       
       return Response.ok(getAverageByDateResponse).build();
 
-    } catch (Exception e) {
+    } catch (RuntimeException e) {
       LOG.error(Constants.ERROR_MESSAGE_GET_AVERAGE);
       LOG.error(e.getMessage(), e);
 
       Result result = new Result(Constants.EXCEPTION_RESPONSE_ERROR_CODE, Constants.ERROR_MESSAGE_GET_AVERAGE);
-      return Response.status(Constants.HTTP_500_CODE).entity(result).build();
+      getAverageByDateResponse.setResult(result);    
+      return Response.status(Constants.HTTP_500_CODE).entity(getAverageByDateResponse).build();
     }
   }
   

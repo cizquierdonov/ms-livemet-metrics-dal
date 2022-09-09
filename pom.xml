@@ -63,11 +63,17 @@
       <artifactId>quarkus-junit5</artifactId>
       <scope>test</scope>
     </dependency>
-    <!-- <dependency>
+    <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
       <scope>test</scope>
-    </dependency> -->
+    </dependency>
+    <dependency>
+      <groupId>org.skyscreamer</groupId>
+      <artifactId>jsonassert</artifactId>
+      <version>1.5.1</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
@@ -113,19 +119,6 @@
           </systemPropertyVariables>
         </configuration>
       </plugin>
-      <!-- <plugin>
-        <groupId>com.google.cloud.tools</groupId>
-        <artifactId>jib-maven-plugin</artifactId>
-        <version>3.2.1</version>
-        <configuration>
-          <container>
-            <mainClass>cl.cizquierdonov.metrics.dal.Main</mainClass>
-          </container>
-          <to>
-            <image>gcr.io/live-metrics-2606/livemet:1.1</image>
-          </to>
-        </configuration>
-      </plugin> -->
     </plugins>
   </build>
   <profiles>
@@ -156,6 +149,16 @@
                 </configuration>
               </execution>
             </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>${surefire-plugin.version}</version>
+            <configuration>
+              <systemPropertyVariables>
+                  <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                  <maven.home>${maven.home}</maven.home>
+              </systemPropertyVariables>
+            </configuration>
           </plugin>
         </plugins>
       </build>
