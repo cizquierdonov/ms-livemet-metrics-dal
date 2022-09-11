@@ -60,9 +60,9 @@ Run the following commands to download, install and run the application:
 REST operations are available to execute in [http://localhost:8080](http://localhost:8080)
 
 ## REST Operations & OpenAPI Specification 
-[![N|Solid](https://img.stackshare.io/service/3417/thumb_retina_pIea9Ji0.png)](https://quarkus.io/)
+[![N|Solid](https://img.stackshare.io/service/3417/thumb_retina_pIea9Ji0.png)](https://editor.swagger.io/)
 
-You can understand and call API operations, request & response specifications using any Swagger or OpenAPI client.
+You can read abount the API operations specifications and understand request & response data using any Swagger or OpenAPI client.
 It is recommended to use the https://editor.swagger.io/ website and copy and paste the content of the `./openapi.yaml` file (inside GitLab repository) on the page.
 
 You can try calling the operations from there selecting https://ms-livemet-metrics-dal-6rwr6t3zia-uc.a.run.app/livemet/metrics-dal/v1 server.
