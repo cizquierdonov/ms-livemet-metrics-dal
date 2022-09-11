@@ -218,7 +218,6 @@ public class MetricResources {
     GetAverageByDateResponse getAverageByDateResponse = new GetAverageByDateResponse();
     try {
 
-      LOG.info("#### Antes avg");
       if ( (request == null) || (request.getAverage() == null)
             || !(RequestDataValidator.noEmptyFieldsGetAverageRequest(request.getAverage())) ) {
 

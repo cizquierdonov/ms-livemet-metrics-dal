@@ -59,6 +59,12 @@ Run the following commands to download, install and run the application:
 
 REST operations are available to execute in [http://localhost:8080](http://localhost:8080)
 
+## Run Unit Tests
+
+Run the following command to execute unit tests:
+
+- `./mvnw compile test quarkus:dev`
+
 ## REST Operations & OpenAPI Specification 
 [![N|Solid](https://img.stackshare.io/service/3417/thumb_retina_pIea9Ji0.png)](https://editor.swagger.io/)
 
