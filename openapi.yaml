@@ -1,0 +1,506 @@
+openapi: 3.0.1
+info:
+  title: Live Metrics
+  description: Defines operations to manage metrics
+  contact:
+    email: izqunited@gmail.com
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://editor.swagger.io
+servers:
+- url: https://ms-livemet-metrics-dal-6rwr6t3zia-uc.a.run.app/livemet/metrics-dal/v1
+- url: http://localhost:8080/livemet/metrics-dal/v1
+paths:
+
+  /metric-types:
+    get:
+      tags:
+      - Get Metric Types
+      summary: Get the configured active metric types
+      description: "Returns a list of active metric types configured in the system and available for use."
+      operationId: getMetricTypes
+      responses:
+        200:
+          description: "List with the information of each metric type and the operation result. The fields are described below:<br/><ul><li><b>metricTypes:</b> defines metric types object<ul><li><b>name:</b> metric type name or identifier</li><li><b>description:</b> detail about metric type purpose</li><li><b>active:</b> indicates if metric type is active in the system to be used</li><li><b>suffix:</b> abbreviation or acronym that represents the metric</li><li><b>scale:</b> this boolean defines if the metric could have decimal digits or not</li></ul></li><li><b>result:</b> indicates result of requested operation<ul><li><b>code:</b> integer operation result code. 0 indicates a sucessful result (2XX HTTP code), a negative value indicates an error (4XX or 5XX HTTP code)</li><li><b>message:</b> description message about the operation result</li></ul></li></ul>"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResGetMetricTypes200'
+        500:
+          description: "Returns an empty list and the operation result error code and message of an internal server error. The fields are described below:<br/><li><b>result:</b> indicates result of requested operation<ul><li><b>code:</b> integer operation result code. 0 indicates a sucessful result (2XX HTTP code), a negative value indicates an error (4XX or 5XX HTTP code)</li><li><b>message:</b> description message about the operation result</li></ul>"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResGetMetricTypes500'
+                
+    post:
+      tags:
+      - Create Metric Type
+      summary: Creates a new metric type
+      description: "Creates a new metric type in the system database, active to be used."
+      operationId: createMetricType
+      requestBody:
+        description: "Information about metric type to create. The fields are described below:<br/><ul><li><b>metricTypes:</b> defines metric types object<ul><li><b>name:</b> metric type name or identifier</li><li><b>description:</b> detail about metric type purpose</li><li><b>active:</b> indicates if metric type is active in the system to be used (<i>optional, is true by default</i>)</li><li><b>suffix:</b> abbreviation or acronym that represents the metric</li><li><b>scale:</b> this boolean defines if the metric could have decimal digits or not (<i>optional, is true by default</i>)</li></ul></li></li></ul>"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReqCreateMetricType'
+        required: true
+      responses:
+        200:
+          description: "Response when metric type is successfuly created. The fields are described below:<br/><li><b>result:</b> indicates result of requested operation<ul><li><b>code:</b> integer operation result code. 0 indicates a sucessful result (2XX HTTP code), a negative value indicates an error (4XX or 5XX HTTP code)</li><li><b>message:</b> description message about the operation result</li></ul>"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResCreateMetricType200'
+        400:
+          description: "Error in request fields values (empty values or invalid values format). The fields are described below:<br/><li><b>result:</b> indicates result of requested operation<ul><li><b>code:</b> integer operation result code. 0 indicates a sucessful result (2XX HTTP code), a negative value indicates an error (4XX or 5XX HTTP code)</li><li><b>message:</b> description message about the operation result</li></ul>"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResCreateMetricType400'
+        500:
+          description: "Internal server error.The fields are described below:<br/><li><b>result:</b> indicates result of requested operation<ul><li><b>code:</b> integer operation result code. 0 indicates a sucessful result (2XX HTTP code), a negative value indicates an error (4XX or 5XX HTTP code)</li><li><b>message:</b> description message about the operation result</li></ul>"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResCreateMetricType500'
+        
+  /metric-posts:
+    get:
+      tags:
+      - Get Metric Posts by Type
+      summary: Get metric posts list of a specific type
+      description: "Returns a list of metric posts recorded in database of a specific metric type."
+      operationId: getMetricPosts
+      parameters:
+      - name: type
+        in: query
+        description: Metric type name to filter and get metric posts <i>(mandatory)</i>
+        schema:
+          type: string
+          example: Temperature
+      responses:
+        200:
+          description: "List with the information of each metric posts and the operation result. The fields are described below:<br/><ul><li><b>metricPosts:</b> defines metric posts object<ul><li><b>id:</b> metric post identifier (auto incremental value)</li><li><b>type:</b> metric type name or identifier</li><li><b>value:</b> numeric value registered by this metric post</li><li><b>review:</b> description about metric post value captured</li><li><b>recordDate:</b> date and time when the metric post value was be measured/captured</li></ul></li><li><b>result:</b> indicates result of requested operation<ul><li><b>code:</b> integer operation result code. 0 indicates a sucessful result (2XX HTTP code), a negative value indicates an error (4XX or 5XX HTTP code)</li><li><b>message:</b> description message about the operation result</li></ul></li></ul>"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResGetMetricPosts200'
+        400:
+          description: "Error in 'type' query string parameter value (empty value). The fields are described below:<br/><li><b>result:</b> indicates result of requested operation<ul><li><b>code:</b> integer operation result code. 0 indicates a sucessful result (2XX HTTP code), a negative value indicates an error (4XX or 5XX HTTP code)</li><li><b>message:</b> description message about the operation result</li></ul>"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResGetMetricPosts400'
+        500:
+          description: "Returns an empty list and the operation result error code and message of an internal server error. The fields are described below:<br/><li><b>result:</b> indicates result of requested operation<ul><li><b>code:</b> integer operation result code. 0 indicates a sucessful result (2XX HTTP code), a negative value indicates an error (4XX or 5XX HTTP code)</li><li><b>message:</b> description message about the operation result</li></ul>"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResGetMetricPosts500'
+    post:
+      tags:
+      - Register Metric Post
+      summary: Register a new metric post
+      description: "Creates a new metric post object in the system database, belonging to a type of metric."
+      operationId: createMetricPost
+      requestBody:
+        description: "Information about metric post to create. The fields are described below:<br/><ul><li><b>metricPosts:</b> defines metric posts object<ul><li><b>type:</b> metric type name or identifier</li><li><b>value:</b> numeric value registered by this metric post</li><li><b>review:</b> description about metric post value captured</li><li><b>recordDate:</b> date and time when the metric post value was be measured/captured</li></ul></li><li><b>result:</b> indicates result of requested operation<ul><li><b>code:</b> integer operation result code. 0 indicates a sucessful result (2XX HTTP code), a negative value indicates an error (4XX or 5XX HTTP code)</li><li><b>message:</b> description message about the operation result</li></ul></li></ul>"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReqCreateMetricPost'
+        required: true
+      responses:
+        200:
+          description: "Response when metric type is successfuly created. The fields are described below:<br/><li><b>result:</b> indicates result of requested operation<ul><li><b>code:</b> integer operation result code. 0 indicates a sucessful result (2XX HTTP code), a negative value indicates an error (4XX or 5XX HTTP code)</li><li><b>message:</b> description message about the operation result</li></ul>"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResCreateMetricPost200'
+        400:
+          description: "Error in request fields values (empty values or invalid values format). The fields are described below:<br/><li><b>result:</b> indicates result of requested operation<ul><li><b>code:</b> integer operation result code. 0 indicates a sucessful result (2XX HTTP code), a negative value indicates an error (4XX or 5XX HTTP code)</li><li><b>message:</b> description message about the operation result</li></ul>"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResCreateMetricPost400'
+        500:
+          description: "Internal server error.The fields are described below:<br/><li><b>result:</b> indicates result of requested operation<ul><li><b>code:</b> integer operation result code. 0 indicates a sucessful result (2XX HTTP code), a negative value indicates an error (4XX or 5XX HTTP code)</li><li><b>message:</b> description message about the operation result</li></ul>"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResCreateMetricType500'
+                
+  /metric-posts/average:
+    post:
+      tags:
+      - Get Averages
+      summary: Get averages by date
+      description: "Calculates and return metric post value averages for a specific date. The averages calculated by the operation are as follows:<br/><ol><li><b>Average of the last minute since the specified date.</b> <br/><i>For instance: to date time '2022-09-10 10:31:00' ('yyyy-MM-dd HH:mm:ss' format) the average will be calculated with all the metrics recorded between <b>'2022-09-10 10:31:00'</b> and <b>'2022-09-10 10:32:00'</b></i>.</li><li><b>Average of the last hour since the specified date.</b> <br/><i>For instance: to date time '2022-09-10 10:31:00' ('yyyy-MM-dd HH:mm:ss' format) the average will be calculated with all the metric posts recorded between <b>'2022-09-10 10:31:00'</b> and <b>'2022-09-10 11:31:00'</b></i>.</li><li><b>Average of the last day since the specified date.</b> <br/><i>For instance: to date time</b> '2022-09-10 10:31:00' ('yyyy-MM-dd HH:mm:ss' format) the average will be calculated with all the metrics recorded between <b>'2022-09-10 10:31:00'</b> and <b>'2022-09-11 10:31:00'</b></i>.</li></ol>"
+      operationId: getAvgByDate
+      requestBody:
+        description: "Information about average calculation requested. Information about average calculation requested. The fields are described below:<br/><ul><li><b>average:</b> average search & calculation request information<ul><li><b>metricType:</b> metric type defined for the average calculation</li><li><b>date:</b> datetime specified for the avg calculation in format 'yyyy-MM-dd HH:mm:ss'</li></ul></li></li></ul>"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReqGetAvgByDate'
+        required: true
+      responses:
+        200:
+          description: "Response of averages calculation. Information about average calculation requested. The fields are described below:<br/><ul><li><b>average:</b> average search & calculation request information<ul><li><b>metricType:</b> metric type defined for the average calculation</li><li><b>date:</b> datetime specified for the avg calculation in format 'yyyy-MM-dd HH:mm:ss'</li><li><b>avgPerDay:</b> Average of the day expressed in a double or integer number + the metric suffix</li><li><b>avgPerHour:</b> Average of the hour expressed in a double or integer number + the metric suffix</li><li><b>avgPerMinute:</b> Average of the minute expressed in a double or integer number + the metric suffix</li></ul></li></li><li><b>result:</b> indicates result of requested operation<ul><li><b>code:</b> integer operation result code. 0 indicates a sucessful result (2XX HTTP code), a negative value indicates an error (4XX or 5XX HTTP code)</li><li><b>message:</b> description message about the operation result</li></ul></ul>"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResGetAvgByDate200'
+        400:
+          description: "Error in request fields values (empty values or invalid values format). The fields are described below:<br/><ul><li><b>average:</b> average search & calculation request information<ul><li><b>metricType:</b> metric type defined for the average calculation</li><li><b>date:</b> datetime specified for the avg calculation in format 'yyyy-MM-dd HH:mm:ss'</li><li><b>avgPerDay:</b> this field is empty in this scenario</li><li><b>avgPerHour:</b> this field is empty in this scenario</li><li><b>avgPerMinute:</b> this field is empty in this scenario</li></ul></li></li><li><b>result:</b> indicates result of requested operation<ul><li><b>code:</b> integer operation result code. 0 indicates a sucessful result (2XX HTTP code), a negative value indicates an error (4XX or 5XX HTTP code)</li><li><b>message:</b> description message about the operation result</li></ul></ul>"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResGetAvgByDate400'
+        500:
+          description: "Internal server error.The fields are described below:<br/><ul><li><b>average:</b> average search & calculation request information<ul><li><b>metricType:</b> metric type defined for the average calculation</li><li><b>date:</b> datetime specified for the avg calculation in format 'yyyy-MM-dd HH:mm:ss'</li><li><b>avgPerDay:</b> this field is empty in this scenario</li><li><b>avgPerHour:</b> this field is empty in this scenario</li><li><b>avgPerMinute:</b> this field is empty in this scenario</li></ul></li></li><li><b>result:</b> indicates result of requested operation<ul><li><b>code:</b> integer operation result code. 0 indicates a sucessful result (2XX HTTP code), a negative value indicates an error (4XX or 5XX HTTP code)</li><li><b>message:</b> description message about the operation result</li></ul></ul>"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResGetAvgByDate500'
+components:
+  schemas:
+    ResGetMetricTypes200:
+      type: object
+      properties:
+        metricTypes:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: "Height"
+              description:
+                type: string
+                example: "Height of a person in centimeters"
+              active:
+                type: boolean
+                example: true
+              suffix:
+                type: string
+                example: "cm"
+              scale:
+                type: boolean
+                example: true
+        result:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 0
+            message:
+              type: string
+              example: Successful operation.
+    ResGetMetricTypes500:
+      type: object
+      properties:
+        metricTypes:
+          type: array
+          items:
+            type: object
+        result:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: -1
+            message:
+              type: string
+              example: An error ocurred getting active metrics.
+    ReqCreateMetricType:
+      type: object
+      properties:
+        metricType:
+          type: object
+          properties:
+            name:
+              type: string
+              example: "Height"
+            description:
+              type: string
+              example: "Height of a person in centimeters"
+            active:
+              type: boolean
+              example: true
+            suffix:
+              type: string
+              example: "cm"
+            scale:
+              type: boolean
+              example: true
+    ResCreateMetricType200:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 0
+            message:
+              type: string
+              example: Resource created successfully.
+    ResCreateMetricType400:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: -2
+            message:
+              type: string
+              example: Fields 'name' and 'description' inside an 'metricType' object are mandatory and must not be null or empty.
+    ResCreateMetricType500:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: -1
+            message:
+              type: string
+              example: An error ocurred creating metric type.
+    ResGetMetricPosts200:
+      type: object
+      properties:
+        metricPosts:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 15
+              type:
+                type: string
+                example: "Temperature"
+              value:
+                type: string
+                example: "25 °C"
+              review:
+                type: string
+                example: "The temperature this morning in my town"
+              recordDate:
+                type: string
+                example: "2022-08-30 16:49:00.000"
+        result:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 0
+            message:
+              type: string
+              example: Successful operation.
+    ResGetMetricPosts400:
+      type: object
+      properties:
+        metricPosts:
+          type: array
+          items:
+            type: object
+        result:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: -2
+            message:
+              type: string
+              example: Query string parameter 'type' is mandatory and must not be empty.
+    ResGetMetricPosts500:
+      type: object
+      properties:
+        metricPosts:
+          type: array
+          items:
+            type: object
+        result:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: -1
+            message:
+              type: string
+              example: An error ocurred getting metric posts.
+    ReqCreateMetricPost:
+      type: object
+      properties:
+        metricPosts:
+          type: object
+          properties:
+            type:
+              type: string
+              example: "Temperature"
+            value:
+              type: string
+              example: "25 °C"
+            review:
+              type: string
+              example: "The temperature this morning in my town"
+            recordDate:
+              type: string
+              example: "2022-08-30 16:49:00.000"
+    ResCreateMetricPost200:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 0
+            message:
+              type: string
+              example: Resource created successfully.
+    ResCreateMetricPost400:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: -3
+            message:
+              type: string
+              example: Field 'recorDate' must have a valid format ('yyyy-MM-dd HH:mm:ss.SSS' or 'yyyy-MM-dd HH:mm:ss') and must be less than the current time.
+    ResCreateMetricPost500:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: -1
+            message:
+              type: string
+              example: An error ocurred creating metric post.
+    ReqGetAvgByDate:
+      type: object
+      properties:
+        average:
+          type: object
+          properties:
+            metricType:
+              type: string
+              example: "Temperature"
+            date:
+              type: string
+              example: "2022-08-22 23:24:00"
+    ResGetAvgByDate200:
+      type: object
+      properties:
+        average:
+          type: object
+          properties:
+            metricType:
+              type: string
+              example: "Temperature"
+            date:
+              type: string
+              example: "2022-08-22 23:24:00"
+            avgPerDay:
+              type: string
+              example: "14.5°C"
+            avgPerHour:
+              type: string
+              example: "17.8°C"
+            avgPerMinute:
+              type: string
+              example: "undefined"
+        result:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: 0
+            message:
+              type: string
+              example: Successful operation.
+    ResGetAvgByDate400:
+      type: object
+      properties:
+        average:
+          type: object
+          properties:
+            metricType:
+              type: string
+              example: "Temperature"
+            date:
+              type: string
+              example: "2022-08-22 23:24:00"
+            avgPerDay:
+              type: string
+              example: ""
+            avgPerHour:
+              type: string
+              example: ""
+            avgPerMinute:
+              type: string
+              example: ""
+        result:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: -3
+            message:
+              type: string
+              example: Field 'date' must have a valid format ('yyyy-MM-dd HH:mm:ss.SSS' or 'yyyy-MM-dd HH:mm:ss') and must be less than the current time.
+    ResGetAvgByDate500:
+      type: object
+      properties:
+        average:
+          type: object
+          properties:
+            metricType:
+              type: string
+              example: "Temperature"
+            date:
+              type: string
+              example: "2022-08-22 23:24:00"
+            avgPerDay:
+              type: string
+              example: ""
+            avgPerHour:
+              type: string
+              example: ""
+            avgPerMinute:
+              type: string
+              example: ""
+        result:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: -1
+            message:
+              type: string
+              example: An error ocurred calculating metric average.
+  securitySchemes:
+    petstore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://petstore.swagger.io/oauth/dialog
+          scopes: {}
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header

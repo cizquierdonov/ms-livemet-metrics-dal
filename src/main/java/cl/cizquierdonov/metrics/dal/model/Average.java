@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Average {
   
@@ -31,6 +30,12 @@ public class Average {
 
   @JsonProperty("avgPerMinute")
   private String avgPerMinute;
+
+  public Average() {
+    avgPerDay = "";
+    avgPerHour = "";
+    avgPerMinute = "";
+  }
 
   public Average clone() {
     Average average = new Average();

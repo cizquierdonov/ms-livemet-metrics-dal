@@ -218,10 +218,14 @@ public class MetricResources {
     GetAverageByDateResponse getAverageByDateResponse = new GetAverageByDateResponse();
     try {
 
+      LOG.info("#### Antes avg");
       if ( (request == null) || (request.getAverage() == null)
             || !(RequestDataValidator.noEmptyFieldsGetAverageRequest(request.getAverage())) ) {
 
         Result errorResult = new Result(Constants.EMPTY_FIELDS_RESPONSE_ERROR_CODE, Constants.INVALID_REQUEST_MESSAGE_GET_AVERAGE);
+        if (request != null) {
+          getAverageByDateResponse.setAverage(request.getAverage());
+        }
         getAverageByDateResponse.setResult(errorResult);
         return Response.status(Constants.HTTP_400_CODE).entity(getAverageByDateResponse).build();
 
@@ -231,6 +235,7 @@ public class MetricResources {
 
       if (!RequestDataValidator.isValidDate(average.getDate())) {
         Result errorResult = new Result(Constants.INVALID_FIELD_FORMAT_RESPONSE_ERROR_CODE, Constants.INVALID_DATE_MESSAGE_GET_AVERAGE);
+        getAverageByDateResponse.setAverage(request.getAverage());
         getAverageByDateResponse.setResult(errorResult);
         return Response.status(Constants.HTTP_400_CODE).entity(getAverageByDateResponse).build();
       }
@@ -248,7 +253,8 @@ public class MetricResources {
       LOG.error(e.getMessage(), e);
 
       Result result = new Result(Constants.EXCEPTION_RESPONSE_ERROR_CODE, Constants.ERROR_MESSAGE_GET_AVERAGE);
-      getAverageByDateResponse.setResult(result);    
+      getAverageByDateResponse.setAverage(request.getAverage());
+      getAverageByDateResponse.setResult(result);
       return Response.status(Constants.HTTP_500_CODE).entity(getAverageByDateResponse).build();
     }
   }

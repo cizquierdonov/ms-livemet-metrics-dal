@@ -183,7 +183,7 @@ public class MetricPostServiceImpl implements MetricPostService {
       avgStr = String.format("%.1f", avg).replace(",", ".").concat(" ").concat(suffix);
 
     } else {
-      avgStr = "-";
+      avgStr = "undefined";
     }
     return avgStr;
   }
