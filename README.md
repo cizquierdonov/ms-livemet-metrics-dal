@@ -75,7 +75,11 @@ You can try calling the operations from there selecting https://ms-livemet-metri
 
 For more information about how to use and execute REST operations, please download and import in Postman the collection file `./postman/Live Metrics.postman_collection.json` inside GitLab repository.
 
-## Learn More
 
-For more information about architecture and integrations, please visit [https://app.diagrams.net/#G1HGe_iqgwu4FQwDNBW-1FL0MTv3BXDk3R](https://app.diagrams.net/#G1HGe_iqgwu4FQwDNBW-1FL0MTv3BXDk3R) to check database E-R diagram
-and Architecture diagram.
+## Architecture Diagram
+
+![LiveMetrics - Documentation-Architecture drawio (2)](https://user-images.githubusercontent.com/26800918/213064765-3e73f109-1230-44eb-86e3-219cf6630e71.png)
+
+## E-R Diagram
+
+![LiveMetrics - Documentation-ER Diagram drawio (1)](https://user-images.githubusercontent.com/26800918/213065178-86d213c4-925b-428c-9277-e19a337e4694.png)
